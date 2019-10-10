@@ -148,3 +148,17 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn')
+TEMP = os.path.join(BASE_DIR, 'temp')
+
+
+# FOR SENDING EMAIL AFTER DEPLOYING IT
+# APP PASSWORD BY GOOGLE WILL BE USED FOR EMAIL HOST PASSWORD?
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'mitchelltabian@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your_app_password_here'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'CodingWithMitch Team <noreply@codingwithmitch.com>'

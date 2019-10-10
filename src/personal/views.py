@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.decorators.cache import cache_control
 from blog.views import get_blog_queryset
 from operator import attrgetter
 from blog.models import BlogPost
@@ -8,15 +9,16 @@ from blog.models import BlogPost
 BLOG_POST_PER_PAGE = 10
 
 # Create your views here.
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def home_screen_view(request):
 
 	context = {}
 
 	query = ""
 
-	if request.GET:
-		query = request.GET.get('q', '')
-		context['query'] = str(query)
+	query = request.GET.get('q', '')
+	context['query'] = str(query)
+	print("home_screen_view: " + str(query))
 
 	blog_posts = sorted(get_blog_queryset(query), key=attrgetter('date_updated'), reverse=True)
 	

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.views.decorators.cache import cache_control
 from account.forms import RegistrationForm, AccountAuthenticationForm, AccountUpdateForm
 from blog.models import BlogPost
 
@@ -16,11 +17,9 @@ def registration_view(request):
 			account = authenticate(email=email, password=raw_password)
 			login(request, account)
 			return redirect('home')
-		else:
-			context['registration_form'] = form
 	else: #GET request
 		form = RegistrationForm()
-		context['registration_form'] = form
+	context['registration_form'] = form
 	return render(request, 'account/register.html', context)
 
 
@@ -47,7 +46,6 @@ def login_view(request):
 			if user:
 				login(request, user)
 				return redirect("home")
-
 	else:
 		form = AccountAuthenticationForm()
 
@@ -57,7 +55,7 @@ def login_view(request):
 
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def account_view(request):
 
 	if not request.user.is_authenticated:

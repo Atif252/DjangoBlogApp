@@ -31,7 +31,7 @@
 
 
   <div class="search-bar mt-sm-2 mr-2">
-  	<form method="get">
+  	<form onsubmit="return executeQuery();">
   		<input type="text" class="form-control" name="q" id="id_q" placeholder="Search...">
   	</form>
   </div>
@@ -61,7 +61,13 @@
 
 
 
-
+<script>
+	function executeQuery(){
+		var query = document.getElementById("id_q").value;
+		window.location.replace("http://127.0.0.1:8000/?q=" + query)
+		return false
+	}
+</script>
 
 
 

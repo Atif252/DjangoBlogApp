@@ -38,11 +38,10 @@
 		<div class="left-column col-lg-7 offset-lg-1">
 
 			<!-- Top 'create post' bar -->
-			<div class="d-lg-none mb-3">
+			<div class="d-lg-none mb-4">
 				<div class="card m-auto d-flex flex-column p-3">
 					<img class="img-fluid d-block m-auto pb-2" src="{% static 'django1.png' %}" width="72" height="72">
-					<p class="lead">In this course you'll learn how to build a simple blog with user registration and blog CRUD functionality. Django is a powerful 
-	  					framework and you'll see why in this course.</p>
+					<p class="lead">In this course you'll learn how to build a simple blog with user registration and blog CRUD functionality. Django is a powerful framework and you'll see why in this course.</p>
 					<p class="m-auto"><a class="btn btn-primary" href="{% url 'blog:create' %}">Create post</a></p>
 				</div>
 			</div>
@@ -89,12 +88,6 @@
 	</div>
 </div>
 
+
+
 {% endblock content %}
-
-
-
-
-
-	<!-- {% for question in questions %}
-		{% include 'personal/snippets/body-snippet.html' with value=question %}
-	{% endfor %} -->

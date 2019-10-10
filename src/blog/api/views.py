@@ -9,7 +9,15 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 from account.models import Account
 from blog.models import BlogPost
-from blog.api.serializers import BlogPostSerializer
+from blog.api.serializers import BlogPostSerializer, BlogPostUpdateSerializer, BlogPostCreateSerializer
+
+
+SUCCESS = 'success'
+ERROR = 'error'
+DELETE_SUCCESS = 'deleted'
+UPDATE_SUCCESS = 'updated'
+CREATE_SUCCESS = 'created'
+
 
 
 @api_view(['GET', ])
@@ -41,11 +49,21 @@ def api_update_blog_view(request, slug):
 		return Response({'response', "You don't have permission to edit that"})
 
 	if request.method == "PUT":
-		serializers = BlogPostSerializer(blog_post, data=request.data)
+		serializers = BlogPostUpdateSerializer(blog_post, data=request.data, partial=True)
 		data = {}
 		if serializers.is_valid():
 			serializers.save()
-			data["success"] = "update successful"
+			data["respone"] = UPDATE_SUCCESS
+			data["pk"] = blog_post.pk
+			data["title"] = blog_post.title
+			data["body"] = blog_post.body
+			data["slug"] = blog_post.slug
+			data["date_updated"] = blog_post.date_updated
+			image_url = str(request.build_absolute_uri(blog_post.image.url))
+			if "?" in image_url:
+				image_url = image_url[:image_urlf.rfind("?")]
+			data['image'] = image_url
+			data['username'] = blog_post.author.username
 			return Response(data=data)
 		return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -69,7 +87,7 @@ def api_delete_blog_view(request, slug):
 		operation = blog_post.delete()
 		data = {}
 		if operation:
-			data["success"] = "delete successful"
+			data["success"] = DELETE_SUCCESS
 		else:
 			data["failure"] = "delete failed"
 		return Response(data=data)
@@ -80,17 +98,28 @@ def api_delete_blog_view(request, slug):
 @permission_classes((IsAuthenticated,))
 def api_create_blog_view(request):
 
-	account = request.user
-	
-	blog_post = BlogPost(author=account)
+	if request.method == 'POST':
 
-	if request.method == "POST":
-		serializers = BlogPostSerializer(blog_post, data=request.data)
+		data = request.data
+		data['author'] = request.user.pk
+		serializers = BlogPostCreateSerializer(data=data)
+
+		data = {}
 		if serializers.is_valid():
-			serializers.save()
-			return Response(serializers.data, status=status.HTTP_201_CREATED)
+			blog_post = serializers.save()
+			data["respone"] = CREATE_SUCCESS
+			data["pk"] = blog_post.pk
+			data["title"] = blog_post.title
+			data["body"] = blog_post.body
+			data["slug"] = blog_post.slug
+			data["date_updated"] = blog_post.date_updated
+			image_url = str(request.build_absolute_uri(blog_post.image.url))
+			if "?" in image_url:
+				image_url = image_url[:image_urlf.rfind("?")]
+			data['image'] = image_url
+			data['username'] = blog_post.author.username
+			return Response(data=data)
 		return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ApiBlogListView(ListAPIView):
 	queryset = BlogPost.objects.all()

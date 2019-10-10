@@ -11,6 +11,9 @@
 	.container{
 		padding: 20px;
 	}
+	.delete-btn{
+		float: right;
+	}
 </style>
 
 
@@ -27,6 +30,9 @@
 				<p>
 					{% if blog_post.author == request.user %}
 						<a href="{% url 'blog:edit' blog_post.slug %}" class="btn btn-primary mb-4">Update</a>
+
+						<a href="{% url 'blog:delete' blog_post.slug %}" class="btn btn-danger delete-btn">Delete</a>
+
 					{% endif %}
 				</p>
 				
@@ -41,5 +47,14 @@
 
 	</div>
 </div>
+
+
+
+<script type="text/javascript">
+	if(performance.navigation.type == 2){
+		location.reload(true);
+	}
+</script>
+
 
 {% endblock content %}
